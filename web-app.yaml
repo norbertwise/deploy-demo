@@ -20,15 +20,36 @@ spec:
         ports:
         - containerPort: 3000
 
+env:
+        -name: user_name
+            valuefrom:
+            secretkeyref:
+            name: mongo-secret
+            key: mongo-user 
+
+          -name: user-pwd
+           valuefrom:
+            secretkeyref:
+            name: mongo-secret
+             key: mongo-password
+-name: Db-url
+valuefrom:
+configMapKeyRef:
+name: mongo-config
+key: mongo-url
+
+
         ---
         apiVersion: v1
 kind: Service
 metadata:
   name: webapp-service
 spec:
+type: NodePort
   selector:
     app: webapp
   ports:
     - protocol: TCP
       port: 3000
       targetPort: 3000
+      NodePort: 30100
